@@ -10,3 +10,4 @@ int main(int argc, char *argv[])
 }
 //віка лунатік
 //1
+//vika lunatik
