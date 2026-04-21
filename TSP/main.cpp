@@ -8,13 +8,3 @@ int main(int argc, char *argv[])
     window.show();
     return app.exec();
 }
-//віка лунатік
-//1
-//vika lunatik
-
-//commit vika
-// commit vika 2
-
-//ostap ne molodets
-
-//misha tut

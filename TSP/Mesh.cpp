@@ -57,3 +57,24 @@ bool Mesh::saveToVTK(QString filename) {
     file.close();
     return true;
 }
+
+// vytvaranie bodu s suradnicami zo suboru a uchovanie do listu points 
+void Mesh::addPoint(double x, double y, double z)
+{
+    points.push_back(Points(x, y, z));
+}
+
+// vytvaranie stien s trougolnikov a ich uchovanie
+void Mesh::addWall(int p1, int p2, int p3)
+{
+    Walls wall;                
+    wall.setWall(p1, p2, p3);
+    walls.push_back(wall);
+}
+
+void Mesh::Neighbours()
+{
+
+}
+
+// getnormal

@@ -7,6 +7,7 @@ using namespace std;
 
 class Functions
 {
+private:
 
 
 

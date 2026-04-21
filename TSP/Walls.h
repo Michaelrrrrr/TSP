@@ -1,4 +1,6 @@
 #pragma once
+#include "Points.h"
+
 class Walls
 {
 private:
@@ -12,4 +14,6 @@ public:
     int getPoint1Index() { return pointsIndexes[0]; };
     int getPoint2Index() { return pointsIndexes[1]; };
     int getPoint3Index() { return pointsIndexes[2]; };
+
+    Points Normal(Points p1, Points p2, Points p3); 
 };

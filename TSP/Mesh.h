@@ -15,6 +15,9 @@ private:
     QVector<int> pointMeighbour;
     QVector<int> pointWalls;
 
+    int** neighb;
+    int* count_neighb;
+
 public:
     
     void clear();
@@ -23,7 +26,7 @@ public:
 
     int getPointsCount() const { return points.size(); }
     int getWallsCount() const { return walls.size(); }
-
+/*
     void addWall(int p1, int p2, int p3) {
         Walls wall;
         wall.setWall(p1, p2, p3);
@@ -34,7 +37,13 @@ public:
         point.setPoint(x1, y1, z1);
         points.push_back(point);
 
-    }
+    }*/
+    void addWall(int p1, int p2, int p3);
+
     QVector<Points> getPoints() { return points; };
     QVector<Walls> getWalls() { return walls; };
+
+    void addPoint(double x, double y, double z);
+
+    void Neighbours();
 };
