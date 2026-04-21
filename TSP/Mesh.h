@@ -2,6 +2,7 @@
 #include <QVector>
 #include <Points.h>
 #include <Walls.h>
+#include <QString>
 
 using namespace std;
 
@@ -14,8 +15,15 @@ private:
     QVector<int> pointMeighbour;
     QVector<int> pointWalls;
 
-
 public:
+    
+    void clear();
+    bool loadFromVTK(QString filename);
+    bool saveToVTK(QString filename);
+
+    int getPointsCount() const { return points.size(); }
+    int getWallsCount() const { return walls.size(); }
+
     void addWall(int p1, int p2, int p3) {
         Walls wall;
         wall.setWall(p1, p2, p3);

@@ -92,11 +92,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Walls.cpp" />
     <QtRcc Include="TSP.qrc" />
     <QtUic Include="TSP.ui" />
     <QtMoc Include="TSP.h" />
+    <ClCompile Include="Functions.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Points.cpp" />
     <ClCompile Include="TSP.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Functions.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Points.h" />
+    <ClInclude Include="Walls.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
