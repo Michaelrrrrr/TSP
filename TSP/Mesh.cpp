@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include <QFile>
 #include <QTextStream>
+#include <iostream>
 
 bool Mesh::loadFromVTK(QString filename) {
     QFile file(filename);
@@ -35,6 +36,10 @@ bool Mesh::loadFromVTK(QString filename) {
         }
     }
     file.close();
+
+    Neighbours();
+    SearchNeighbours();
+
     return true;
 }
 
@@ -74,7 +79,75 @@ void Mesh::addWall(int p1, int p2, int p3)
 
 void Mesh::Neighbours()
 {
+    int size = points.size();
 
+    if (neighb != nullptr || count_neighb != nullptr)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            delete[] neighb[i];
+        }
+        delete[] neighb;
+        delete[] count_neighb;
+    }
+
+    neighb = new int*[size];
+    count_neighb = new int[size];
+
+    for (int i = 0; i < size; i++)
+    {
+        neighb[i] = new int[size];
+        count_neighb[i] = 0;
+    }
+}
+
+void Mesh::SearchNeighbours()
+{
+    int size = walls.size();
+
+    //prechod po vsetkym trojuholnikam
+    for (int i = 0; i < size; i++)
+    {
+        //suradnici
+        int p1 = walls[i].getPoint1Index();
+        int p2 = walls[i].getPoint2Index();
+        int p3 = walls[i].getPoint3Index();
+
+        int arr[3] = { p1, p2, p3 };
+
+        for (int j = 0; j < 3; j++)
+        {
+            int current = arr[j];
+            
+            // hladame ostatne body ako susiedov
+            for (int k = 0; k < 3; k++)
+            {
+                if (j != k)
+                {
+                    int neighbour = arr[k];
+                    bool exists = false;
+
+                    //overenie ci uz existuje 
+                    for (int m = 0; m < count_neighb[current]; m++)
+                    {
+                        if (neighb[current][m] == neighbour)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if (!exists)
+                    {
+                        // zapis noveho susieda podla current bodu
+                        int index = count_neighb[current];
+                        neighb[current][index] = neighbour;
+                        count_neighb[current]++;
+                    }
+                }
+            }
+        }
+    }
 }
 
 // getnormal

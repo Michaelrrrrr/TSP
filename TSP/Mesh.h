@@ -15,8 +15,8 @@ private:
     QVector<int> pointMeighbour;
     QVector<int> pointWalls;
 
-    int** neighb;
-    int* count_neighb;
+    int** neighb = nullptr;
+    int* count_neighb = nullptr;
 
 public:
     
@@ -46,4 +46,5 @@ public:
     void addPoint(double x, double y, double z);
 
     void Neighbours();
+    void SearchNeighbours();
 };
