@@ -6,6 +6,11 @@
 
 using namespace std;
 
+struct Vec3
+{
+    double x, y, z;
+};
+
 class Mesh
 {
 private:
@@ -44,7 +49,12 @@ public:
     QVector<Walls> getWalls() { return walls; };
 
     void addPoint(double x, double y, double z);
-
+  
     void Neighbours();
     void SearchNeighbours();
+
+    Vec3 getAB(int p1, int p2);
+    Vec3 getAC(int p1, int p3);
+    double CalculateSurface();
+    void CalculateNormals();
 };

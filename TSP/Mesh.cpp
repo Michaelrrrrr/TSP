@@ -150,4 +150,95 @@ void Mesh::SearchNeighbours()
     }
 }
 
+Vec3 Mesh::getAB(int p1, int p2)
+{
+    Vec3 v;
+
+    v.x = points[p2].getX() - points[p1].getX();
+    v.y = points[p2].getY() - points[p1].getY();
+    v.z = points[p2].getZ() - points[p1].getZ();
+
+    return v;
+}
+
+Vec3 Mesh::getAC(int p1, int p3)
+{
+    Vec3 v;
+
+    v.x = points[p3].getX() - points[p1].getX();
+    v.y = points[p3].getY() - points[p1].getY();
+    v.z = points[p3].getZ() - points[p1].getZ();
+
+    return v;
+}
+
+double Mesh::CalculateSurface()
+{
+    int size = walls.size();
+    double suma = 0;
+
+    for (int i = 0; i < size; i++)
+    {
+        int p1 = walls[i].getPoint1Index();
+        int p2 = walls[i].getPoint2Index();
+        int p3 = walls[i].getPoint3Index();
+
+        Vec3 AB = getAB(p1, p2);
+        Vec3 AC = getAC(p1, p3);
+
+        // AB * AC
+        Vec3 N;
+        N.x = AB.y * AC.z - AB.z * AC.y;
+        N.y = AB.z * AC.x - AB.x * AC.z;
+        N.z = AB.x * AC.y - AB.y * AC.x;
+
+        double area = 0.5 * sqrt(N.x * N.x + N.y * N.y + N.z * N.z);
+
+        suma += area;
+    }
+    return suma;
+}
+
+void Mesh::CalculateNormals()
+{
+    int count_points = points.size();
+
+    for (int i = 0; i < count_points; i++)
+    {
+        Vec3 normal = {0, 0, 0};
+        int count = 0;
+
+        int size = walls.size();
+
+        // prechod po trojuholnikam
+        for (int j = 0; j < size; j++)
+        {
+            int p1 = walls[j].getPoint1Index();
+            int p2 = walls[j].getPoint2Index();
+            int p3 = walls[j].getPoint3Index();
+
+            if (p1 == i || p2 == i || p3 == i)
+            {
+                // vektory hranej
+                Vec3 AB = getAB(p1, p2);
+                Vec3 AC = getAC(p1, p3);
+
+                // vektorovy sucin
+                Vec3 N;
+                N.x = AB.y * AC.z - AB.z * AC.y;
+                N.y = AB.z * AC.x - AB.x * AC.z;
+                N.z = AB.x * AC.y - AB.y * AC.x;
+
+                // pridanie normaly trojuholnika k normaly vrcholu
+                normal.x += N.x;
+                normal.y += N.y;
+                normal.z += N.z;
+
+                count++;
+            }
+        }
+
+        cout << "Normal " << i << ": " << normal.x << " " << normal.y << " " << normal.z << endl;
+    }
+}
 // getnormal
