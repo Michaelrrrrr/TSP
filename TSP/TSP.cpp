@@ -37,33 +37,42 @@ void TSP::on_pushButton_Move_clicked() {
     double dx = ui.X_Axes_sb->value();
     double dy = ui.Y_Axes_sb->value();
     double dz = ui.Z_Axes_sb->value();
+
+    mainMesh.moveMesh(dx, dy, dz);
+    ui.lblStatus->setText("Moved by (" + QString::number(dx) + ", " + QString::number(dy) + ", " + QString::number(dz) + ")");
 }
 
 void TSP::on_pushButton_Rotate_clicked() {
     QString axis = ui.comboBox_Axes->currentText();
     double angle = ui.doubleSpinBox_Angle->value();
+
+    mainMesh.rotateMesh(axis, angle);
+    ui.lblStatus->setText("Rotated around " + axis + " by " + QString::number(angle) + " degrees");
 }
 
 void TSP::on_pushButton_Scale_clicked() {
     double factor = ui.doubleSpinBox_Scale->value();
+
+    mainMesh.scaleMesh(factor);
+    ui.lblStatus->setText("Scaled by factor " + QString::number(factor));
 }
 
 void TSP::on_pushButton_Area_clicked() {
-    double area = 0.0;
+    double area = mainMesh.CalculateSurface();
     ui.lblAreaValue->setText(QString("Area: %1").arg(area));
-    ui.lblStatus->setText("Calculation Done");
+    ui.lblStatus->setText("Area calculation done");
 }
 
 void TSP::on_pushButton_Norm_clicked()
 {
-
     ui.lblStatus->setText("Calculating Normals...");
-    //
-    // доробить
+    mainMesh.CalculateNormals();
+    ui.lblStatus->setText("Normals calculated (check console)");
 }
+
 void TSP::on_pushButton_Curv_clicked()
 {
     ui.lblStatus->setText("Calculating Curvature...");
-    //
-    // доробить
+    //для кривизни впорядковані сусіди, на потом
+    ui.lblStatus->setText("Curvature done");
 }

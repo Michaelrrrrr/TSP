@@ -2,6 +2,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <iostream>
+#include <map>
 
 bool Mesh::loadFromVTK(QString filename) {
     QFile file(filename);
@@ -38,7 +39,7 @@ bool Mesh::loadFromVTK(QString filename) {
     file.close();
 
     Neighbours();
-    SearchNeighbours();
+    SearchNeighboursOrdered();
 
     return true;
 }
@@ -242,3 +243,92 @@ void Mesh::CalculateNormals()
     }
 }
 // getnormal
+
+void Mesh::SearchNeighboursOrdered()
+{
+    int numPoints = points.size();
+    Neighbours();
+
+    // ring_edges[вершина_центр][сусід_A] = сусід_B
+    std::vector<std::map<int, int>> ring_edges(numPoints);
+
+    int numWalls = walls.size();
+    for (int i = 0; i < numWalls; i++)
+    {
+        int p[3] = { walls[i].getPoint1Index(), walls[i].getPoint2Index(), walls[i].getPoint3Index() };
+
+        for (int j = 0; j < 3; j++)
+        {
+            int center = p[j];           // v_i
+            int n1 = p[(j + 1) % 3];     // n_i^1
+            int n2 = p[(j + 2) % 3];     // n_i^2
+
+            ring_edges[center][n1] = n2;
+        }
+    }
+
+    for (int i = 0; i < numPoints; i++)
+    {
+        if (ring_edges[i].empty()) continue;
+
+        int start_node = ring_edges[i].begin()->first;
+
+        for (auto const& pair : ring_edges[i]) {
+            bool is_destination = false;
+            for (auto const& check_pair : ring_edges[i]) {
+                if (check_pair.second == pair.first) { is_destination = true; break; }
+            }
+            if (!is_destination) { start_node = pair.first; break; }
+        }
+
+        int current_node = start_node;
+
+        do {
+            neighb[i][count_neighb[i]] = current_node;
+            count_neighb[i]++;
+
+            if (ring_edges[i].find(current_node) != ring_edges[i].end()) {
+                current_node = ring_edges[i][current_node];
+            }
+            else {
+                break;
+            }
+
+        } while (current_node != start_node && count_neighb[i] < numPoints);
+    }
+}
+
+void Mesh::moveMesh(double dx, double dy, double dz) {
+    for (int i = 0; i < points.size(); ++i) {
+        points[i].setPoint(points[i].getX() + dx, points[i].getY() + dy, points[i].getZ() + dz);
+    }
+}
+
+void Mesh::scaleMesh(double factor) {
+    if (factor == 0) return;
+    for (int i = 0; i < points.size(); ++i) {
+        points[i].setPoint(points[i].getX() * factor, points[i].getY() * factor, points[i].getZ() * factor);
+    }
+}
+
+void Mesh::rotateMesh(QString axis, double angle) {
+    double rad = angle * M_PI / 180.0;
+    double cosA = cos(rad);
+    double sinA = sin(rad);
+
+    for (int i = 0; i < points.size(); ++i) {
+        double x = points[i].getX();
+        double y = points[i].getY();
+        double z = points[i].getZ();
+
+        if (axis == "X") {
+            points[i].setPoint(x, y * cosA - z * sinA, y * sinA + z * cosA);
+        }
+        else if (axis == "Y") {
+            points[i].setPoint(x * cosA + z * sinA, y, -x * sinA + z * cosA);
+        }
+        else if (axis == "Z") {
+            points[i].setPoint(x * cosA - y * sinA, x * sinA + y * cosA, z);
+        }
+    }
+}

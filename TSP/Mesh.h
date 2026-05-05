@@ -57,4 +57,9 @@ public:
     Vec3 getAC(int p1, int p3);
     double CalculateSurface();
     void CalculateNormals();
+    void SearchNeighboursOrdered();
+
+    void moveMesh(double dx, double dy, double dz);
+    void scaleMesh(double factor);
+    void rotateMesh(QString axis, double angle);
 };
